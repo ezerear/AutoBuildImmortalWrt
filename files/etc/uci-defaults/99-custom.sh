@@ -56,6 +56,22 @@ elif [ "$count" -gt 1 ]; then
    fi
 fi
 
+# 端口转发
+echo -e "
+config redirect
+        option dest 'lan'
+        option target 'DNAT'
+        option name 'lucky'
+        option src 'wan'
+        option src_dport '4433'
+        option dest_ip '10.10.10.1'
+        option dest_port ''" >> firewall_port_Forwards
+if [ -f firewall_port_Forwards ]; then
+  cat firewall_port_Forwards >> /etc/config/firewall
+  rm firewall_port_Forwards
+  uci commit firewall
+fi
+
 # 设置所有网口可访问网页终端
 uci delete ttyd.@ttyd[0].interface
 
